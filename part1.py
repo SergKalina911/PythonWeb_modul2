@@ -211,4 +211,66 @@ Poetry буде доступний за адресою $VENV_PATH/bin/poetry і 
 тощо. Далі слідує tool.poetry.dependencies, саме тут вказані всі production залежності. Розділ 
 tool.poetry.dev-dependencies призначений для залежностей, які використовуються під час розробки, наприклад pytest 
 для тестів.
+
+
+                        Ініціалізація вже існуючого проекту
+
+​Щоб ініціалізувати poetry у вже готовому проекті, потрібно виконати команду:
+
+            poetry init
+
+Після цього буде запущено процес опитування щось на зразок зазначеного нижче:
+
+            This command will guide you through creating your pyproject.toml config.
+
+            Package name [test_poetry]:  
+            Version [0.1.0]:  
+            Description []:  
+            Author [FirstName LastName <youremail@gmail.com>, n to skip]:  
+            License []:  
+
+            Would you like to define your main dependencies interactively? (yes/no) [yes]
+            You can specify a package in the following forms:
+            - A single name (requests)
+            - A name and a constraint (requests@^2.23.0)
+            - A git url (git+https://github.com/python-poetry/poetry.git)
+            - A git url with a revision (git+https://github.com/python-poetry/poetry.git#develop)
+            - A file path (../my-package/my-package.whl)
+            - A directory (../my-package/)
+            - A url (https://example.com/packages/my-package-0.1.0.tar.gz)
+
+            Search for package to add (or leave blank to continue):
+
+            Would you like to define your development dependencies interactively? (yes/no) [yes]
+            Search for package to add (or leave blank to continue): 
+
+            Generated file
+
+            [tool.poetry]
+            name = "test_poetry"
+            version = "0.1.0"
+            description = ""
+            authors = ["FirstName LastName <youremail@gmail.com>"]
+
+            [tool.poetry.dependencies]
+            python = "3.10"
+
+            [tool.poetry.dev-dependencies]
+
+            [build-system]
+            requires = ["poetry-core>=1.0.0"]
+            build-backend = "poetry.core.masonry.api"
+
+
+            Do you confirm generation? (yes/no) [yes]
+
+
+Для активації віртуального середовища необхідно виконати команду:
+
+            poetry shell
+
+Але краще ініціалізувати проект через PyCharm, щоб у терміналі ми працювали у віртуальному середовищі автоматично.
+
+CAUTION
+Не забудьте вказати параметр Poetry executable, щоб PyCharm знав, де встановлено poetry.
 """
