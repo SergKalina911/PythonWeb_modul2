@@ -164,4 +164,51 @@ Poetry буде доступний за адресою $VENV_PATH/bin/poetry і 
 в іншому місці. Щоб видалити Poetry, просто видаліть весь каталог $VENV_PATH.
 
 
+                        Створення нового проекту
+
+​Після встановлення ми можемо створювати "poetry-проекти" за допомогою команди poetry new <ім'я проекту>.
+
+Припустимо, що ми ввели команду poetry new solution, тоді ми отримаємо наступну структуру каталогів:
+
+├── solution
+│   └── __init__.py
+├── pyproject.toml
+├── README.rst
+└── tests
+    ├── __init__.py
+    └── test_solution.py
+
+Ми бачимо, що у проекті solution був створений однойменний пакет - директорія solution з відповідним __init__.py. 
+Будь-який poetry-проект завжди містить хоча б один пакет.
+
+Окрім пакету solution, у проекті вже є пакет tests з першим тестом і ми повинні розуміти, що справжні проекти завжди 
+мають тести.
+
+У файлі README.rst повинен бути опис проекту. Це файл формату reStructuredText.
+
+Як бачимо Poetry автоматично створив усі необхідні файли для майбутнього пакета, але найбільший інтерес представляє
+файл під назвою pyproject.toml, цей файл - просунута альтернатива requirements.txt.
+
+Вміст файлу pyproject.toml буде наступним:
+
+        [tool.poetry]
+        name = "solution"
+        version = "0.1.0"
+        description = ""
+        authors = ["FirstName LastName <youremail@gmail.com>"]
+
+        [tool.poetry.dependencies]
+        python = "^3.9"
+
+        [tool.poetry.dev-dependencies]
+        pytest = "^5.2"
+
+        [build-system]
+        requires = ["poetry-core>=1.0.0"]
+        build-backend = "poetry.core.masonry.api"
+
+Формат файлу TOML. Розділ tool.poetry призначений для опису проекту: назва, версія, коротка інформація про проект 
+тощо. Далі слідує tool.poetry.dependencies, саме тут вказані всі production залежності. Розділ 
+tool.poetry.dev-dependencies призначений для залежностей, які використовуються під час розробки, наприклад pytest 
+для тестів.
 """
