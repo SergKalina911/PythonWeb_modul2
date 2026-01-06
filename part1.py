@@ -685,4 +685,20 @@ dict_of_users: Dict[int, str] = {
 print(dict_of_users)
 
 
+"""
+                        Союзи
+
+​Ми також можемо використовувати типи союзів Union. Наприклад, функція може повертати лише один з типів integer або 
+float:
+"""
+from typing import Union
+
+Number = Union[float, int]
+
+
+def add(x: Number, y: Number) -> Number:
+    return x + y
+
+print(add(1, 2))
+print(add(1.5, 2.5))
 
