@@ -368,7 +368,8 @@ poetry.lock.
 
             python3 -m pdb myscript.py
 
-Або з інтерпретатора Python:"""
+Або з інтерпретатора Python:
+"""
 
 # import pdb
 # import part1
@@ -380,9 +381,140 @@ poetry.lock.
 
 Розділи документацій популярних IDE:
 
-Visual Studio Code - https://code.visualstudio.com/docs/python/debugging
-PyCharm - https://www.jetbrains.com/help/pycharm/debugging-your-first-python-application.html
-PyCharm частина два - https://www.jetbrains.com/help/pycharm/part-1-debugging-python-code.html
+Visual Studio Code - (https://code.visualstudio.com/docs/python/debugging)
+PyCharm - (https://www.jetbrains.com/help/pycharm/debugging-your-first-python-application.html)
+PyCharm частина два - (https://www.jetbrains.com/help/pycharm/part-1-debugging-python-code.html)
+
+
+                        Логування застосунку
+
+Незважаючи на всі тести, дебаг та перевірки коду на правильність роботи, помилки все одно трапляються. І трапляються 
+помилки саме у продакшені при взаємодії із реальними користувачами. Користувачі будуть використовувати ваш 
+застосунок, найчастіше не так, як ви очікуєте. І навіть не так, як ви можете собі уявити.
+
+Щоб виправити такі помилки, потрібно знати, що саме відбувалося в застосунку і які дії призвели до виникнення помилок. 
+Для цього потрібно записувати, зберігати стан застосунку в деякий журнал. Такий журнал для простоти називають log та 
+механізм журналювання подій — логуванням (logging).
+
+Python має дуже потужний пакет логування, який так і називається — logging. Цей пакет дає можливість налаштувати 
+журнал для застосунку в пару рядків або налаштувати складні багаторівневі механізми логування. Пакет logging — це 
+дуже гнучкий та потужний інструмент, і знати про його можливості просто обов'язково для будь-якого Python-розробника.
+
+Приклад налаштування логування в консоль:
+"""
+
+import logging
+
+# print a log message to the console.
+logging.warning('This is a warning!')
+
+# В результаті в консолі:
+# WARNING:root:This is a warning!
+
+# Трохи змінимо інформацію, що логується:
+
+import logging
+
+logging.basicConfig(
+    format='%(asctime)s %(message)s',
+    level=logging.DEBUG,
+        handlers=[
+        logging.FileHandler("program.log"),
+        logging.StreamHandler()
+    ])
+logging.warning('An example message.')
+logging.warning('Another message')
+
+"""
+Ми визначили два обробника (handlers). Один виводить у консоль logging.StreamHandler(), а другий 
+logging.FileHandler("program.log") у файл program.log. Після запуску ви побачите:
+
+WARNING:root:An example message.
+WARNING:root:Another message
+
+На відміну від функції print, логер вміє:
+
+        - логувати із зазначенням модуля, функції, у якій сталася подія.
+        - логувати одночасно в кілька місць (файл, консоль, віддалений хост тощо).
+        - логувати з кількох потоків у потокобезпечному режимі (повідомлення будуть цілісними і не змішуються, як це 
+        може бути при використанні print).
+        - змінювати рівні логування (робити логування більш/менш детальним), змінюючи лише один параметр для проекту.
+        - логувати у файли в циклічному режимі (перезаписуючи найстаріший або після досягнення певного розміру).
+
+
+Ключові концепції logging включають:
+
+                                Level | Numeric Value |
+                                -----------------------
+                                CRITICAL | 50 |
+                                ERROR    | 40 |
+                                WARNING  | 30 |
+                                INFO     | 20 |
+                                DEBUG    | 10 |
+                                NOTSET   | 0  |
+    - рівень логування — число від 0 до 50, яке вказує, наскільки важливим є цей запис;
+    - formatter — об'єкт, який відповідає за те, яким чином форматуватиметься повідомлення, які там будуть поля та 
+    як буде виглядати кожен запис;
+    - handler — об'єкт, який відповідає за обробку кожного повідомлення; handler містить форматтер, рівень логування 
+    та інструкцію, що робити з повідомленням.
+Для детальнішого вивчення logging відвідайте сторінку документації (https://docs.python.org/3/library/logging.html).
+
+handler буде обробляти повідомлення, тільки якщо його рівень дорівнює або вище мінімального рівня, вказаного для 
+цього handler. Таким чином, ми можемо, наприклад, писати взагалі всі повідомлення логування в консоль і лише 
+повідомлення вище ERROR — у файл. Для цього нам достатньо буде визначити два handler: один для консолі з рівнем DEBUG 
+і ще один для логування у файл з рівнем ERROR.
+"""
+
+import logging
+
+# створюємо логер, даємо йому ім'я та встановлюємо рівень logging.DEBUG
+logger = logging.getLogger('simple_example')
+logger.setLevel(logging.DEBUG)
+
+# створюємо handler для виведення в консоль та встановлюємо рівень DEBUG
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# створюємо форматтер: час виведення (asctime), ім'я модуля (name), рівень (levelname) та саме повідомлення (message)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# додаємо зазначений форматтер до handler ch
+ch.setFormatter(formatter)
+
+# додаємо handler ch до логера
+logger.addHandler(ch)
+
+# Створюємо файловий handler для логера:
+fh = logging.FileHandler("app.log")
+fh.setLevel(logging.ERROR)
+fh.setFormatter(formatter)
+
+# додаємо файловий handler fh до логера
+logger.addHandler(fh)
+
+# приклад виконання коду
+logger.debug('debug message')
+logger.info('info message')
+logger.warning('warn message')
+logger.error('error message')
+logger.critical('critical message')
+
+"""
+Запустивши такий скрипт, ви у консолі побачите всі повідомлення на всіх рівнях, а у файлі app.log — тільки ERROR та 
+CRITICAL.
+
+Виведення в консоль:
+
+        2022-10-02 23:35:03,599 - simple_example - DEBUG - debug message
+        2022-10-02 23:35:03,599 - simple_example - INFO - info message
+        2022-10-02 23:35:03,599 - simple_example - WARNING - warn message
+        2022-10-02 23:35:03,599 - simple_example - ERROR - error message
+        2022-10-02 23:35:03,599 - simple_example - CRITICAL - critical message
+
+Вміст файлу app.log:
+
+        2022-10-02 23:35:03,599 - simple_example - ERROR - error message
+        2022-10-02 23:35:03,599 - simple_example - CRITICAL - critical message
 
 
 """
