@@ -1,2 +1,8 @@
 2026-01-06 14:41:47,842 - simple_example - ERROR - error message
 2026-01-06 14:41:47,842 - simple_example - CRITICAL - critical message
+2026-01-06 15:27:56,210 - simple_example - ERROR - error message
+2026-01-06 15:27:56,210 - simple_example - CRITICAL - critical message
+2026-01-06 15:28:32,959 - simple_example - ERROR - error message
+2026-01-06 15:28:32,960 - simple_example - CRITICAL - critical message
+2026-01-06 15:29:06,237 - simple_example - ERROR - error message
+2026-01-06 15:29:06,237 - simple_example - CRITICAL - critical message
