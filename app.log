@@ -6,3 +6,11 @@
 2026-01-06 15:28:32,960 - simple_example - CRITICAL - critical message
 2026-01-06 15:29:06,237 - simple_example - ERROR - error message
 2026-01-06 15:29:06,237 - simple_example - CRITICAL - critical message
+2026-01-06 15:34:01,628 - simple_example - ERROR - error message
+2026-01-06 15:34:01,629 - simple_example - CRITICAL - critical message
+2026-01-06 15:34:11,717 - simple_example - ERROR - error message
+2026-01-06 15:34:11,717 - simple_example - CRITICAL - critical message
+2026-01-06 15:34:35,036 - simple_example - ERROR - error message
+2026-01-06 15:34:35,036 - simple_example - CRITICAL - critical message
+2026-01-06 15:35:53,866 - simple_example - ERROR - error message
+2026-01-06 15:35:53,866 - simple_example - CRITICAL - critical message
