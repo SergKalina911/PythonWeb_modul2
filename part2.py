@@ -492,4 +492,55 @@ CMD будуть скасовані.
 час запуску контейнера. Якщо задано кілька аргументів, то вони інтерпретуються як визначення кількох томів.
 
 
+                        Створюємо образ
+
+​Тепер перед створенням образу необхідно відредагувати файл app.py. Вказуємо, що
+
+if __name__ == '__main__':
+  app.run(debug=False, host='0.0.0.0')
+
+Потім створіть образ докеру наступною командою. При виконанні команди, ви повинні перебувати в корені проекту.
+
+У команді замість krabaton повинно бути ім’я вашого користувача, яке ви зареєстрували на сайті https://hub.docker.com (прим. Автор використав своє ім’я користувача). Замість flask-docker можна задати своє ім’я образу
+
+            docker build . -t kalinasergey911/flask-docker
+
+Запустіть процес створення образу і у вас почнеться виведення процесу у консолі:
+
+[+] Building 5.1s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                                                                                                                                                                                                                 0.0s 
+ => => transferring dockerfile: 32B                                                                                                                                                                                                                                  0.0s 
+ => [internal] load .dockerignore                                                                                                                                                                                                                                    0.0s 
+ => => transferring context: 2B                                                                                                                                                                                                                                      0.0s 
+ => [internal] load metadata for docker.io/library/python:3.10                                                                                                                                                                                                       1.5s 
+ => [auth] library/python:pull token for registry-1.docker.io                                                                                                                                                                                                        0.0s 
+ => [1/4] FROM docker.io/library/python:3.10@sha256:e9c35537103a2801a30b15a77d4a56b35532c964489b125ec1ff24f3d5b53409                                                                                                                                                 0.0s 
+ => [internal] load build context                                                                                                                                                                                                                                    0.0s 
+ => => transferring context: 711B                                                                                                                                                                                                                                    0.0s 
+ => CACHED [2/4] WORKDIR /app                                                                                                                                                                                                                                        0.0s 
+ => [3/4] COPY . .                                                                                                                                                                                                                                                   0.0s 
+ => [4/4] RUN pip install -r requirements.txt                                                                                                                                                                                                                        3.3s 
+ => exporting to image                                                                                                                                                                                                                                               0.1s 
+ => => exporting layers                                                                                                                                                                                                                                              0.1s 
+ => => writing image sha256:2fe6ac3db17346e9d6ef833fff86f9041dada3849c1cd8fa53b084dafe94609b                                                                                                                                                                         0.0s 
+ => => naming to docker.io/krabaton/flask-docker   
+
+
+Як бачимо, образ був створений за 10 кроків та зайняло це 5.1 секунди. Ваш час може відрізнятися у більший чи менший 
+бік, все залежить від продуктивності машини.
+
+Запустимо контейнер зі створеного образу.
+
+            docker run -itd -p 3000:5000 kalinasergey911/flask-docker 
+
+Після запуску контейнера наш застосунок доступний на наступному URL http://localhost:3000/. Це дозволяє протестувати 
+наш застосунок локально.
+
+
+                        Висновок
+
+​Ми створили застосунок, поклали його в образ і запустили як контейнер на нашій машині. Ви можете приступати до 
+виконання домашнього завдання.
+
+Також для подальшого поглиблення у тему використовуйте офіційний Playground https://www.docker.com/play-with-docker/
 """
