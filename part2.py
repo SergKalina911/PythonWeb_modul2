@@ -181,7 +181,7 @@ docker version. Ця команда повинна видати інформац
 
 Якщо виконати команду ps із ключем –a, ми побачимо список усіх контейнерів, навіть не запущених
 
-    docker build
+                        docker build
 
 ​Команда дозволяє створити новий образ з усіма змінами, виконаними у контейнері:
 
@@ -196,4 +196,120 @@ docker version. Ця команда повинна видати інформац
 З повним переліком команд завжди можна познайомитись у документації. - https://docs.docker.com/reference/cli/docker/
 
 Давайте познайомимося з цими і не лише командами з практичного боку.
+
+
+                        Робота з Docker
+
+
+
+Ми розберемо практичне застосування основних команди, які найчастіше використовують програмісти у роботі з Docker.
+
+Щоб завантажити з DockerHUB (https://hub.docker.com/) образ і запустити контейнер з hello-world. (https://hub.docker.com/_/hello-world)
+
+Потрібно виконати команду:
+
+            docker run -it hello-world
+
+Команда повинна повернути наступне повідомлення.
+
+            Hello from Docker!
+            This message shows that your installation appears to be working correctly.
+
+            To generate this message, Docker took the following steps:
+            1. The Docker client contacted the Docker daemon.
+            2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+                (amd64)
+            3. The Docker daemon created a new container from that image which runs the
+                executable that produces the output you are currently reading.
+            4. The Docker daemon streamed that output to the Docker client, which sent it
+                to your terminal.
+
+            To try something more ambitious, you can run an Ubuntu container with:
+            $ docker run -it ubuntu bash
+
+            Share images, automate workflows, and more with a free Docker ID:
+            https://hub.docker.com/
+
+            For more examples and ideas, visit:
+            https://docs.docker.com/get-started/
+
+
+
+        !!! INFO
+        Якщо образ hello-world був відсутній у системі, то автоматично він буде завантажений з репозиторію DockerHUB 
+        командою docker pull hello-world, а потім буде запущений контейнер.
+        PS E:\WebDir> docker run -it hello-world
+        Unable to find image 'hello-world:latest' locally
+        latest: Pulling from library/hello-world
+        2db29710123e: Pull complete
+        Digest: sha256:18a657d0cc1c7d0678a3fbea8b7eb4918bba25968d3e1b0adebfa71caddbc346
+        Status: Downloaded newer image for hello-world:latest
+        ...
+
+Щоб подивитися на запущені контейнери, потрібно виконати команду.
+
+            docker ps
+
+Результатом буде таблиця з основною інформацією про запущений контейнер.
+
+Якщо додати необов'язковий прапорець -a, то побачимо ще й не запущені контейнери системи
+
+            docker ps -a
+
+У нашому випадку контейнер hello-world буде у списку не запущених. По-перше, ми не запускали його в режимі демона, 
+а по-друге він виконався і відразу завершив свою роботу. Щоб контейнер працював у фоні, нам потрібен сервіс – 
+наприклад образ з базою даних.
+
+Давайте запустимо контейнер з базою даних MongoDB (https://hub.docker.com/_/mongo), виконавши команду
+
+            docker run -d mongo
+
+Якщо контейнер вже працює з прапором -d, то зайти в нього можна командою exec, головне вказати id hash контейнера. 
+Цей hash ми можемо дізнатися двома способами, коли запускали контейнер або за допомогою команди docker ps. У моєму 
+випадку це 82978a2ecfc3511a7dcf61c93c20f07ef08ca403e01483e1061a3e3b6de8213b. Не обов'язково вводити всі значення 
+хешу, часто достатньо ввести перші 4-5 символів.
+
+            docker exec -it 8297 bin/sh
+
+У команді ми додали bin/sh. Це говорить, що коли ми зайшли в контейнер, потрібно виконати команду і запустити 
+термінал. З'явиться запрошення терміналу на початку із символом #. Виконаємо там команду mongod. Якщо сервер з 
+базою даних запустився правильно, ми побачимо логи. Введіть команду exit, щоб вийти з контейнера.
+
+Зупинити виконання контейнера можна командою stop, потім потрібно вказати або ім'я контейнера, або його hash (можна 
+ввести перші цифри hash, головне щоб докер однозначно зрозумів, що потрібно зупинити)
+
+            docker stop <name|hash>
+
+Повторний запуск контейнера виконується командою start
+
+            docker start <name|hash>
+
+Видалення контейнера команда
+
+            docker rm <name|hash>
+
+Щоб контейнер був нам "корисний", необхідно прокинути порти назовні. Сервер MongoDb працює всередині контейнера на 
+порту 27017, нам потрібно зв'язати порт всередині контейнера та зовні за допомогою параметра -p 27017:27017. 
+Ліворуч це наш порт 27017, який буде видно на комп'ютері для нашої програми. Праворуч порт 27017, який використовує 
+контейнер у собі. Лівий порт ми можемо вказувати під час запуску будь-якого, головне, щоб він був вільним у системі. Але прийнято, що MongoDb працює на порту 27017.
+
+            docker run -p 27017:27017 -d mongo
+
+Тепер ми можемо отримати доступ до бази даних всередині контейнера на порту 27017, що ми й робитимемо, коли почнемо 
+вивчати MongoDb
+
+Для того, щоб вивести збереження даних зовні контейнера, можна використовувати voluemes. Це дозволяє зберігати дані 
+не всередині контейнера, а локально на диску, наприклад, у папці e/dbstorage.
+
+            docker run -p 27017:27017 -v e/dbstorage:/data/db -d mongo
+
+Це дозволяє навіть у разі видалення поточного контейнера не втратити актуальну базу даних. І ми можемо запустити 
+новий контейнер, вказавши при цьому volumes, і дані будуть ті самі.
+
+Щоб побачити всі образи, які ми завантажили в систему, виконайте команду:
+
+            docker images
+
+Наступним кроком ми створимо свій образ з Dockerfile.
+
 """
