@@ -312,4 +312,75 @@ docker version. Ця команда повинна видати інформац
 
 Наступним кроком ми створимо свій образ з Dockerfile.
 
+
+                                        Докерезація застосунку
+
+                        Створення базового застосунку Flask
+
+​Для прикладу ми зробимо базовий застосунок Flask з виведенням «Hello World!» у браузері. По-перше, створіть каталог 
+для нашого проекту
+
+            mkdir flask-docker-app 
+            cd flask-docker-app 
+
+Відкрийте редактор коду та створіть 2 файли.
+
+app.py - Наш основний скрипт
+requirements.txt — тут вказуються всі пакети, що використовуються у вашому проекті.
+
+Налаштуйте віртуальне середовище для нашого застосунку:
+
+            python -m venv env 
+            source env/bin/activate 
+
+Встановлюємо Flask
+
+            pip install Flask
+
+Коли Flask встановлений, він завантажує інші пакети, які йому необхідні для ефективної роботи. Щоб додати ці пакети 
+у наш файл requirements.txt. Ми виконуємо команду:
+
+            python -m pip freeze > requirements.txt
+
+Ви матимете схожий вміст файлу requirements.txt, який відрізняється тільки версіями.
+
+            click==8.1.3
+            colorama==0.4.5
+            Flask==2.2.2
+            itsdangerous==2.1.2
+            Jinja2==3.1.2
+            MarkupSafe==2.1.1
+            Werkzeug==2.2.2
+
+    !!!INFO
+        Якщо ми використовуємо pipenv як віртуальне середовище, то команда створення файлу requirements.txt:
+        pipenv lock --keep-outdated --requirements > requirements.txt
+
+Для poetry це команда:
+            poetry export --without-hashes --format=requirements.txt > requirements.txt
+
+Потім ми додамо наступний код в app.py.
+
+    from flask import Flask
+
+    app = Flask(__name__)
+
+
+    @app.route('/')
+    def hello():
+        return "Hello World!"
+
+
+    if __name__ == '__main__':
+        app.run()
+
+
+Тут ми для головного роутера @app.route('/') виводимо повідомлення "Hello World!". Запустимо app.py
+
+            python app.py
+
+Програма Flask працюватиме на наступному URL http://localhost:5000/.
+
+Завершіть роботу сервера, натиснувши «Ctrl+C». І почнемо докерезацію нашого застосунку.
+
 """
